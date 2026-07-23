@@ -1,0 +1,6 @@
+[submodule "Vendor/libusb"]
+	path = Vendor/libusb
+	url = https://github.com/libusb/libusb.git
+[submodule "Vendor/libuvc"]
+	path = Vendor/libuvc
+	url = https://github.com/libuvc/libuvc.git

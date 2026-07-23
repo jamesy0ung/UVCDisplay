@@ -1,0 +1,24 @@
+diff --git a/libusb/os/darwin_usb.c b/libusb/os/darwin_usb.c
+index 3f84d066..f3454aa6 100644
+--- a/libusb/os/darwin_usb.c
++++ b/libusb/os/darwin_usb.c
+@@ -3365,6 +3365,7 @@ static int darwin_detach_kernel_driver_locked (struct libusb_device_handle *dev_
+ 
+     if (darwin_has_capture_entitlements ()) {
+       /* request authorization */
++#if !TARGET_OS_IPHONE
+       kresult = IOServiceAuthorize (dpriv->service, kIOServiceInteractionAllowed);
+       if (kresult != kIOReturnSuccess) {
+         usbi_warn (ctx, "IOServiceAuthorize: %s", darwin_error_str(kresult));
+@@ -3376,6 +3377,11 @@ static int darwin_detach_kernel_driver_locked (struct libusb_device_handle *dev_
+       if (err != LIBUSB_SUCCESS) {
+         return err;
+       }
++#else
++      /* IOServiceAuthorize is unavailable on iOS. */
++      usbi_warn (ctx, "IOServiceAuthorize unavailable on iOS");
++      return LIBUSB_ERROR_NOT_SUPPORTED;
++#endif
+     } else {
+       usbi_info (ctx, "no capture entitlements. may not be able to detach the kernel driver for this device");
+       if (0 != geteuid()) {
